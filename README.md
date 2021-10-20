@@ -1,6 +1,6 @@
 # cs_beacon_download
 
-自实现beacon下载器
+自实现beacon下载器(本项目未完成)
 
 下载器原理就是访问cs的stager下载stageless Beacon
 
