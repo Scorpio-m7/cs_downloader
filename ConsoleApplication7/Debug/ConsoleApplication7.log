@@ -1,0 +1,10 @@
+﻿  ConsoleApplication7.cpp
+E:\code\c\vs2019代码\ConsoleApplication7\ConsoleApplication7.cpp(15,56): warning C4474: printf: 格式字符串中传递的参数太多
+E:\code\c\vs2019代码\ConsoleApplication7\ConsoleApplication7.cpp(15,56): message : 占位符和其参数预计 0 可变参数，但提供的却是 1 参数
+E:\code\c\vs2019代码\ConsoleApplication7\ConsoleApplication7.cpp(39,20): warning C4477: “printf”: 格式字符串“%d”需要类型“int”的参数，但可变参数 1 拥有了类型“DWORD (__stdcall *)(void)”
+E:\code\c\vs2019代码\ConsoleApplication7\ConsoleApplication7.cpp(65,5): error C2059: 语法错误:“else”
+E:\code\c\vs2019代码\ConsoleApplication7\ConsoleApplication7.cpp(65,10): error C2143: 语法错误: 缺少“;”(在“{”的前面)
+E:\code\c\vs2019代码\ConsoleApplication7\ConsoleApplication7.cpp(65,10): error C2447: “{”: 缺少函数标题(是否是老式的形式表?)
+E:\code\c\vs2019代码\ConsoleApplication7\ConsoleApplication7.cpp(68,5): error C2059: 语法错误:“return”
+E:\code\c\vs2019代码\ConsoleApplication7\ConsoleApplication7.cpp(69,1): error C2059: 语法错误:“}”
+E:\code\c\vs2019代码\ConsoleApplication7\ConsoleApplication7.cpp(69,1): error C2143: 语法错误: 缺少“;”(在“}”的前面)
