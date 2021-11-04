@@ -67,7 +67,7 @@ int main(int argc, char* argv[]) {
         }
         PVA VA = (PVA)GetProcAddress(LoadLibraryA("kernel32.dll"), "VirtualAlloc");//分配内存
         //PVA VA = (PVA)GetProcAddress(LoadLibraryA("kernel32.dll"), "VirtualAlloc2");//win10可以使用这个函数
-        if (VA = NULL) {
+        if (VA == NULL) {
             printf("get function error:%d\n", GetLastError());
             return 0;
         }
